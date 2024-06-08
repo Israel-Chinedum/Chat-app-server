@@ -21,12 +21,12 @@ io.on('connection', (socket) =>{
 
     socket.on('createMessage', function(data){
         console.log('createMessage', data);
-    })
 
-    socket.emit('newMessage', {
-        from: 'favour',
-        text: 'O boy how far na!',
-        createdAt: '0:00'
+        io.emit('newMessage', {
+            from: data.from,
+            text: data.text
+        });
+
     });
 
 })

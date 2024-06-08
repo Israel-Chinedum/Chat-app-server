@@ -13,12 +13,6 @@
         const socket = io();
         socket.on('connect', ()=>{
             console.log('connected to server!');
-
-            socket.emit('createMessage', {
-                from: 'israel',
-                text: 'how e dey be na!'
-            });
-
         });
 
         socket.on('newMessage', function(data){
