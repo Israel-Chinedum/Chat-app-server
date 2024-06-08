@@ -15,6 +15,9 @@
             console.log('connected to server!');
         });
 
+        socket.on('joined', data => console.log(data));
+        socket.on('enter', data => console.log(data));
+
         socket.on('newMessage', function(data){
             console.log('newMessage', data)
         });
