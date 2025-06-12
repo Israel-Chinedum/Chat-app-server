@@ -12,6 +12,11 @@ export const createGroup = (socket, userId) => {
       }
     }
 
+    if (typeof image !== "string") {
+      const buffer = Buffer.from(image.buffer);
+      image["buffer"] = buffer;
+    }
+
     try {
       await groupModel({
         creator: userId,
@@ -23,8 +28,8 @@ export const createGroup = (socket, userId) => {
       userGroups(socket, userId);
       socket.emit("new-group");
     } catch (error) {
-      console.log(error);
       socket.emit("error", "Unable to create group!");
+      console.log("createGroup.js Error: ", error);
     }
   });
 };
