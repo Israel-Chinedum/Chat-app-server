@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import { stringify } from "querystring";
 
 export const mongooseConnection = () => {
   return Promise.resolve(
@@ -16,12 +15,21 @@ export const mongooseConnection = () => {
 
 // CREATE USER MODEL/SCHEMA
 const createUserSchema = mongoose.Schema({
-  "First Name": String,
-  "Last Name": String,
-  Age: Number,
+  "First Name": { type: String, required: true },
+  "Last Name": { type: String, required: true },
+  Age: { type: Number, required: true },
   "Date of Birth": Date,
-  username: String,
-  password: String,
+  groups: {
+    type: [
+      {
+        userId: String,
+        groupName: String,
+        isAdmin: Boolean,
+      },
+    ],
+  },
+  username: { type: String, required: true },
+  password: { type: String, required: true },
 });
 export const userModel = mongoose.model("users", createUserSchema);
 
@@ -64,8 +72,33 @@ const createGroupSchema = mongoose.Schema({
       message: "groupImage field must be a string or type of imageSchema!",
     },
   },
-  groupAdmins: { type: [String] },
-  groupMembers: { type: [String] },
+  groupMembers: {
+    type: [
+      {
+        memberId: String,
+        username: String,
+        isAdmin: Boolean,
+      },
+    ],
+    required: true,
+  },
   Date: { type: Date, required: true },
 });
 export const groupModel = mongoose.model("groups", createGroupSchema);
+
+// NOTIFICATIONS MODEL
+const notificationSchema = mongoose.Schema({
+  name: { type: String, required: true },
+  date: { type: Date, required: true },
+  urgent: { type: Boolean, required: true },
+});
+export const notificationModel = mongoose.model(
+  "notifications",
+  notificationSchema
+);
+
+// REQUEST REVIEW MODEL
+const reqReviewSchema = mongoose.Schema({
+  userId: { type: String, required: true },
+});
+export const reqReviewModel = mongoose.model("reviews", reqReviewSchema);

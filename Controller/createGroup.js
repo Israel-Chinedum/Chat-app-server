@@ -1,5 +1,6 @@
-import { groupModel } from "../Model/models.js";
+import { groupModel, userModel } from "../Model/models.js";
 import { userGroups } from "./sendUserGroups.js";
+import { allGroups } from "./sendGroups.js";
 
 export const createGroup = (socket, userId) => {
   socket.on("new-group", async ({ groupName, image }) => {
@@ -17,15 +18,25 @@ export const createGroup = (socket, userId) => {
       image["buffer"] = buffer;
     }
 
+    const { username } = await userModel.findById(userId);
+
     try {
       await groupModel({
         creator: userId,
         groupName,
         groupImage: image,
+        groupMembers: [
+          {
+            memberId: userId,
+            username,
+            isAdmin: true,
+          },
+        ],
         Date: new Date(),
       }).save();
 
       userGroups(socket, userId);
+      allGroups(socket, userId);
       socket.emit("new-group");
     } catch (error) {
       socket.emit("error", "Unable to create group!");

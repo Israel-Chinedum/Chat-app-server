@@ -36,7 +36,7 @@ export const Socket = (io) => {
 
     // SEND ALL GROUPS
     socket.on("get-groups", () => {
-      allGroups(socket);
+      allGroups(socket, userId);
     });
 
     socket.on("get-myGroups", () => {
